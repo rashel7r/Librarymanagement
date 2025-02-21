@@ -64,9 +64,11 @@ mongoose.connection.on('disconnected', () => {
 // Routes
 const bookRoutes = require('./routes/books');
 const userRoutes = require('./routes/users');
+const orderRoutes = require('./routes/orders');
 
 app.use('/api/books', bookRoutes);
 app.use('/api', userRoutes);  // This will make the register endpoint available at /api/register
+app.use('/api/orders', orderRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

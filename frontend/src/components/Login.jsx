@@ -40,12 +40,14 @@ function Login() {
       setEmailError('Please include @ in your email address');
       return;
     }
-    // TODO: Implement actual login logic here
-    console.log('Login submitted:', formData);
+
+    // Check if the email indicates an admin role
+    const isAdmin = formData.email.toLowerCase().includes('pfadmin');
     
-    // Set user data in context
+    // Set user data in context with role information
     setUser({
       email: formData.email,
+      role: isAdmin ? 'admin' : 'client'
     });
     
     // Show success message
@@ -102,7 +104,7 @@ function Login() {
             boxShadow: 2
           }}
         >
-          Login successful! Welcome back
+          Login successful! Welcome back, {formData.email.split('@')[0]}
         </Alert>
       </Snackbar>
       <Container 

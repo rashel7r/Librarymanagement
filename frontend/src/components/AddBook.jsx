@@ -11,6 +11,7 @@ import {
   Alert,
 } from '@mui/material';
 import axios from 'axios';
+import Footer from './Footer';
 
 function AddBook() {
   const navigate = useNavigate();
@@ -208,21 +209,315 @@ function AddBook() {
   return (
     <Box 
       sx={{ 
-        width: '100%',
+        width: '100vw',
+        position: 'absolute',
+        left: '50%',
+        transform: 'translateX(-50%)',
         display: 'flex',
-        justifyContent: 'space-between',
-        px: 2,
-        gap: 16,
-        bgcolor: '#f8f8f8',
+        flexDirection: 'column',
         minHeight: '100vh',
-        position: 'relative',
-        top: 0,
-        left: 0,
-        right: 0,
+        backgroundImage: 'url("/images/Forms.jpg")',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        backgroundAttachment: 'fixed',
         pt: 8,
-        zIndex: 1
+        overflowX: 'hidden',
+        overflowY: 'auto'
       }}
     >
+      <Box sx={{ display: 'flex', flex: 1, gap: 4, pl: 2, mb: 4 }}>
+        <Box 
+          sx={{ 
+            position: 'relative',
+            mt: '55px',
+            ml: 4,
+            width: '550px',
+            height: '580px',
+          }}
+        >
+          <Box
+            sx={{
+              position: 'relative',
+              width: '100%',
+              height: '100%',
+              overflow: 'hidden',
+              borderRadius: '8px',
+              boxShadow: '0 4px 8px rgba(0,0,0,0.1)'
+            }}
+          >
+            <Box
+              sx={{
+                display: 'flex',
+                transition: 'transform 0.5s ease-in-out',
+                transform: `translateX(-${currentImageIndex * 100}%)`,
+                height: '100%',
+              }}
+            >
+              {images.map((image, index) => (
+                <img
+                  key={index}
+                  src={image}
+                  alt={`Add Book ${index + 1}`}
+                  style={{
+                    minWidth: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
+                  }}
+                />
+              ))}
+            </Box>
+          </Box>
+        </Box>
+        <Paper 
+          elevation={3} 
+          sx={{ 
+            pt: 1,
+            px: 4,
+            pb: 0,
+            mt: '60px',
+            height: 'fit-content',
+            width: '600px',
+            ml: 16,
+            bgcolor: 'rgba(255, 255, 255, 0.9)',
+            borderRadius: '8px',
+            border: '2px solid #000000'
+          }}
+        >
+          <Typography 
+            variant="h5" 
+            component="h2" 
+            gutterBottom 
+            sx={{ 
+              mb: 1.5,
+              fontFamily: '"Playfair Display", serif',
+              textAlign: 'center',
+              fontSize: '1.8rem',
+              fontWeight: 600,
+              color: '#75767A',
+              letterSpacing: '0.5px'
+            }}
+          >
+            {editId ? 'Edit Book Details' : 'Add New Book'}
+          </Typography>
+          <Box component="form" onSubmit={handleSubmit} sx={{ mt: 0 }}>
+            <TextField
+              fullWidth
+              label="Title"
+              name="title"
+              value={formData.title}
+              onChange={handleChange}
+              required
+              margin="dense"
+              size="small"
+              sx={{
+                '& .MuiInputLabel-root': {
+                  fontFamily: '"Roboto", sans-serif',
+                  fontWeight: 500
+                },
+                '& .MuiInputBase-input': {
+                  fontFamily: '"Roboto", sans-serif'
+                }
+              }}
+            />
+            <TextField
+              fullWidth
+              label="Author"
+              name="author"
+              value={formData.author}
+              onChange={handleChange}
+              required
+              margin="dense"
+              size="small"
+              sx={{
+                '& .MuiInputLabel-root': {
+                  fontFamily: '"Roboto", sans-serif',
+                  fontWeight: 500
+                },
+                '& .MuiInputBase-input': {
+                  fontFamily: '"Roboto", sans-serif'
+                }
+              }}
+            />
+            <TextField
+              fullWidth
+              label="Description"
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+              required
+              margin="dense"
+              multiline
+              rows={1}
+              size="small"
+              sx={{
+                '& .MuiInputLabel-root': {
+                  fontFamily: '"Roboto", sans-serif',
+                  fontWeight: 500
+                },
+                '& .MuiInputBase-input': {
+                  fontFamily: '"Roboto", sans-serif'
+                }
+              }}
+            />
+            <TextField
+              fullWidth
+              label="ISBN"
+              name="isbn"
+              value={formData.isbn}
+              onChange={handleChange}
+              required
+              margin="dense"
+              size="small"
+              sx={{
+                '& .MuiInputLabel-root': {
+                  fontFamily: '"Roboto", sans-serif',
+                  fontWeight: 500
+                },
+                '& .MuiInputBase-input': {
+                  fontFamily: '"Roboto", sans-serif'
+                }
+              }}
+            />
+            <TextField
+              fullWidth
+              label="Published Year"
+              name="publishedYear"
+              type="number"
+              value={formData.publishedYear}
+              onChange={handleChange}
+              required
+              margin="dense"
+              size="small"
+              inputProps={{ min: 0 }}
+              sx={{
+                '& .MuiInputLabel-root': {
+                  fontFamily: '"Roboto", sans-serif',
+                  fontWeight: 500
+                },
+                '& .MuiInputBase-input': {
+                  fontFamily: '"Roboto", sans-serif'
+                }
+              }}
+            />
+            <TextField
+              fullWidth
+              label="Genre"
+              name="genre"
+              value={formData.genre}
+              onChange={handleChange}
+              required
+              margin="dense"
+              size="small"
+              sx={{
+                '& .MuiInputLabel-root': {
+                  fontFamily: '"Roboto", sans-serif',
+                  fontWeight: 500
+                },
+                '& .MuiInputBase-input': {
+                  fontFamily: '"Roboto", sans-serif'
+                }
+              }}
+            />
+            <TextField
+              fullWidth
+              label="Available Copies"
+              name="availableCopies"
+              type="number"
+              value={formData.availableCopies}
+              onChange={handleChange}
+              required
+              margin="dense"
+              size="small"
+              inputProps={{ min: 0 }}
+              sx={{
+                '& .MuiInputLabel-root': {
+                  fontFamily: '"Roboto", sans-serif',
+                  fontWeight: 500
+                },
+                '& .MuiInputBase-input': {
+                  fontFamily: '"Roboto", sans-serif'
+                }
+              }}
+            />
+            <TextField
+              fullWidth
+              label="Book Cover Image URL"
+              name="imageUrl"
+              value={formData.imageUrl}
+              onChange={handleChange}
+              margin="dense"
+              size="small"
+              helperText="Leave empty for automatic cover selection based on title, or enter a custom image URL"
+              sx={{
+                '& .MuiInputLabel-root': {
+                  fontFamily: '"Roboto", sans-serif',
+                  fontWeight: 500
+                },
+                '& .MuiInputBase-input': {
+                  fontFamily: '"Roboto", sans-serif'
+                },
+                mb: 1
+              }}
+            />
+            {formData.imageUrl && (
+              <Box sx={{ mt: 0.5, mb: 0.5, textAlign: 'center' }}>
+                <Typography variant="subtitle2" sx={{ mb: 0.25 }}>Preview:</Typography>
+                <img 
+                  src={formData.imageUrl.startsWith('/') ? formData.imageUrl : `/images/${formData.imageUrl}`}
+                  alt="Book cover preview"
+                  style={{
+                    maxWidth: '100px',
+                    maxHeight: '140px',
+                    objectFit: 'contain',
+                    border: '1px solid #ddd',
+                    borderRadius: '4px'
+                  }}
+                  onError={(e) => {
+                    e.target.src = '/images/Default Book1.jpg';
+                  }}
+                />
+              </Box>
+            )}
+            <Box sx={{ mt: 0.5, mb: 2, display: 'flex', gap: 2 }}>
+              <Button
+                type="submit"
+                variant="contained"
+                fullWidth
+                sx={{ 
+                  py: 1,
+                  bgcolor: '#75767A',
+                  '&:hover': {
+                    bgcolor: '#636466'
+                  }
+                }}
+              >
+                {editId ? 'Update Book' : 'Add Book'}
+              </Button>
+              <Button
+                variant="contained"
+                color="secondary"
+                fullWidth
+                onClick={() => editId ? navigate('/profile', { state: { showDetails: true } }) : navigate('/')}
+                sx={{ py: 1 }}
+              >
+                Cancel
+              </Button>
+            </Box>
+          </Box>
+        </Paper>
+      </Box>
+
+      <Box 
+        sx={{ 
+          width: '100%',
+          bgcolor: '#75767A',
+          mt: 'auto'
+        }}
+      >
+        <Footer />
+      </Box>
+
       <Snackbar
         open={openSnackbar}
         autoHideDuration={1500}
@@ -246,283 +541,6 @@ function AddBook() {
           {snackbarMessage}
         </Alert>
       </Snackbar>
-      <Box 
-        sx={{ 
-          position: 'relative',
-          mt: '55px',
-          width: '550px',
-          height: '580px',
-        }}
-      >
-        <Box
-          sx={{
-            position: 'relative',
-            width: '100%',
-            height: '100%',
-            overflow: 'hidden',
-            borderRadius: '8px',
-            boxShadow: '0 4px 8px rgba(0,0,0,0.1)'
-          }}
-        >
-          <Box
-            sx={{
-              display: 'flex',
-              transition: 'transform 0.5s ease-in-out',
-              transform: `translateX(-${currentImageIndex * 100}%)`,
-              height: '100%',
-            }}
-          >
-            {images.map((image, index) => (
-              <img
-                key={index}
-                src={image}
-                alt={`Add Book ${index + 1}`}
-                style={{
-                  minWidth: '100%',
-                  height: '100%',
-                  objectFit: 'cover',
-                }}
-              />
-            ))}
-          </Box>
-        </Box>
-      </Box>
-      <Paper 
-        elevation={3} 
-        sx={{ 
-          pt: 1.5,
-          px: 2,
-          pb: 0.5,
-          mt: '80px',
-          height: 'fit-content',
-          width: '650px',
-          ml: 2,
-          bgcolor: '#f5f5f5',
-          borderRadius: '8px'
-        }}
-      >
-        <Typography 
-          variant="h5" 
-          component="h2" 
-          gutterBottom 
-          sx={{ 
-            mb: 1.5,
-            fontFamily: '"Playfair Display", serif',
-            textAlign: 'center',
-            fontSize: '1.8rem',
-            fontWeight: 600,
-            color: '#2c3e50',
-            letterSpacing: '0.5px'
-          }}
-        >
-          {editId ? 'Edit Book Details' : 'Add New Book'}
-        </Typography>
-        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 0 }}>
-          <TextField
-            fullWidth
-            label="Title"
-            name="title"
-            value={formData.title}
-            onChange={handleChange}
-            required
-            margin="dense"
-            size="small"
-            sx={{
-              '& .MuiInputLabel-root': {
-                fontFamily: '"Roboto", sans-serif',
-                fontWeight: 500
-              },
-              '& .MuiInputBase-input': {
-                fontFamily: '"Roboto", sans-serif'
-              }
-            }}
-          />
-          <TextField
-            fullWidth
-            label="Author"
-            name="author"
-            value={formData.author}
-            onChange={handleChange}
-            required
-            margin="dense"
-            size="small"
-            sx={{
-              '& .MuiInputLabel-root': {
-                fontFamily: '"Roboto", sans-serif',
-                fontWeight: 500
-              },
-              '& .MuiInputBase-input': {
-                fontFamily: '"Roboto", sans-serif'
-              }
-            }}
-          />
-          <TextField
-            fullWidth
-            label="Description"
-            name="description"
-            value={formData.description}
-            onChange={handleChange}
-            required
-            margin="dense"
-            multiline
-            rows={1}
-            size="small"
-            sx={{
-              '& .MuiInputLabel-root': {
-                fontFamily: '"Roboto", sans-serif',
-                fontWeight: 500
-              },
-              '& .MuiInputBase-input': {
-                fontFamily: '"Roboto", sans-serif'
-              }
-            }}
-          />
-          <TextField
-            fullWidth
-            label="ISBN"
-            name="isbn"
-            value={formData.isbn}
-            onChange={handleChange}
-            required
-            margin="dense"
-            size="small"
-            sx={{
-              '& .MuiInputLabel-root': {
-                fontFamily: '"Roboto", sans-serif',
-                fontWeight: 500
-              },
-              '& .MuiInputBase-input': {
-                fontFamily: '"Roboto", sans-serif'
-              }
-            }}
-          />
-          <TextField
-            fullWidth
-            label="Published Year"
-            name="publishedYear"
-            type="number"
-            value={formData.publishedYear}
-            onChange={handleChange}
-            required
-            margin="dense"
-            size="small"
-            inputProps={{ min: 0 }}
-            sx={{
-              '& .MuiInputLabel-root': {
-                fontFamily: '"Roboto", sans-serif',
-                fontWeight: 500
-              },
-              '& .MuiInputBase-input': {
-                fontFamily: '"Roboto", sans-serif'
-              }
-            }}
-          />
-          <TextField
-            fullWidth
-            label="Genre"
-            name="genre"
-            value={formData.genre}
-            onChange={handleChange}
-            required
-            margin="dense"
-            size="small"
-            sx={{
-              '& .MuiInputLabel-root': {
-                fontFamily: '"Roboto", sans-serif',
-                fontWeight: 500
-              },
-              '& .MuiInputBase-input': {
-                fontFamily: '"Roboto", sans-serif'
-              }
-            }}
-          />
-          <TextField
-            fullWidth
-            label="Available Copies"
-            name="availableCopies"
-            type="number"
-            value={formData.availableCopies}
-            onChange={handleChange}
-            required
-            margin="dense"
-            size="small"
-            inputProps={{ min: 0 }}
-            sx={{
-              '& .MuiInputLabel-root': {
-                fontFamily: '"Roboto", sans-serif',
-                fontWeight: 500
-              },
-              '& .MuiInputBase-input': {
-                fontFamily: '"Roboto", sans-serif'
-              }
-            }}
-          />
-          <TextField
-            fullWidth
-            label="Book Cover Image URL"
-            name="imageUrl"
-            value={formData.imageUrl}
-            onChange={handleChange}
-            margin="dense"
-            size="small"
-            helperText="Leave empty for automatic cover selection based on title, or enter a custom image URL"
-            sx={{
-              '& .MuiInputLabel-root': {
-                fontFamily: '"Roboto", sans-serif',
-                fontWeight: 500
-              },
-              '& .MuiInputBase-input': {
-                fontFamily: '"Roboto", sans-serif'
-              },
-              mb: 1
-            }}
-          />
-          {formData.imageUrl && (
-            <Box sx={{ mt: 1, mb: 2, textAlign: 'center' }}>
-              <Typography variant="subtitle2" sx={{ mb: 1 }}>Preview:</Typography>
-              <img 
-                src={formData.imageUrl.startsWith('/') ? formData.imageUrl : `/images/${formData.imageUrl}`}
-                alt="Book cover preview"
-                style={{
-                  maxWidth: '150px',
-                  maxHeight: '200px',
-                  objectFit: 'contain',
-                  border: '1px solid #ddd',
-                  borderRadius: '4px'
-                }}
-                onError={(e) => {
-                  e.target.src = '/images/Default Book1.jpg';
-                }}
-              />
-            </Box>
-          )}
-          <Box sx={{ mt: 1.5, mb: 1, display: 'flex', gap: 2 }}>
-            <Button
-              type="submit"
-              variant="contained"
-              fullWidth
-              sx={{ 
-                py: 1,
-                bgcolor: '#75767A',
-                '&:hover': {
-                  bgcolor: '#636466'
-                }
-              }}
-            >
-              {editId ? 'Update Book' : 'Add Book'}
-            </Button>
-            <Button
-              variant="contained"
-              color="secondary"
-              fullWidth
-              onClick={() => editId ? navigate('/profile', { state: { showDetails: true } }) : navigate('/')}
-              sx={{ py: 1 }}
-            >
-              Cancel
-            </Button>
-          </Box>
-        </Box>
-      </Paper>
     </Box>
   );
 }

@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { ThemeProvider, createTheme } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
@@ -9,6 +9,10 @@ import AddBook from './components/AddBook';
 import Login from './components/Login';
 import SignUp from './components/SignUp';
 import UserProfile from './components/UserProfile';
+import BookDetails from './components/BookDetails';
+import AddToCart from './components/AddToCart';
+import Checkout from './components/Checkout';
+import OrderDetails from './components/OrderDetails';
 
 export const UserContext = createContext(null);
 
@@ -26,6 +30,19 @@ const theme = createTheme({
     }
   },
 });
+
+// Protected Route Component
+const ProtectedRoute = ({ element: Element, allowedRole, user, redirectPath = '/login' }) => {
+  if (!user) {
+    return <Navigate to={redirectPath} replace />;
+  }
+
+  if (allowedRole && user.role !== allowedRole) {
+    return <Navigate to="/" replace />;
+  }
+
+  return Element;
+};
 
 function App() {
   const [user, setUser] = useState(null);
@@ -56,10 +73,14 @@ function App() {
             }}>
               <Routes>
                 <Route path="/" element={<BookList />} />
-                <Route path="/add" element={<AddBook />} />
+                <Route path="/add" element={<ProtectedRoute element={<AddBook />} user={user} allowedRole="admin" />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/signup" element={<SignUp />} />
-                <Route path="/profile" element={<UserProfile />} />
+                <Route path="/profile" element={<ProtectedRoute element={<UserProfile />} user={user} />} />
+                <Route path="/book/:id" element={<BookDetails />} />
+                <Route path="/cart" element={<AddToCart />} />
+                <Route path="/checkout" element={<ProtectedRoute element={<Checkout />} user={user} allowedRole="client" />} />
+                <Route path="/order-details" element={<ProtectedRoute element={<OrderDetails />} user={user} allowedRole="admin" />} />
               </Routes>
             </Box>
           </Box>

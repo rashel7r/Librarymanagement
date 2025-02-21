@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import {
   Container,
@@ -23,8 +23,11 @@ import ClearIcon from '@mui/icons-material/Clear';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import axios from 'axios';
 import Carousel from './Carousel';
+import Footer from './Footer';
+import { UserContext } from '../App';
 
 function BookList() {
+  const { user } = useContext(UserContext);
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -108,7 +111,25 @@ function BookList() {
   }
 
   return (
-    <Box>
+    <Box sx={{ 
+      minHeight: '100vh',
+      display: 'flex',
+      flexDirection: 'column',
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      overflow: 'auto',
+      backgroundImage: 'url("/images/Homepagebg1.jpg")',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat',
+      backgroundAttachment: 'fixed',
+      width: '100vw',
+      m: 0,
+      p: 0
+    }}>
       <Carousel />
       {error && (
         <Snackbar
@@ -127,7 +148,15 @@ function BookList() {
           </Alert>
         </Snackbar>
       )}
-      <Container maxWidth="xl" sx={{ py: 4, mt: 4 }}>
+      <Container 
+        maxWidth="xl" 
+        sx={{ 
+          py: 4, 
+          mt: 4, 
+          flex: 1,
+          px: { xs: 1, sm: 2, md: 3 }
+        }}
+      >
         <Box 
           sx={{ 
             bgcolor: '#E0E0E0',
@@ -285,6 +314,7 @@ function BookList() {
                     borderRadius: 2,
                     overflow: 'hidden',
                     bgcolor: '#F5F5F5',
+                    border: '2px solid #000000',
                     '&:hover': {
                       transform: 'translateY(-4px)',
                       boxShadow: '0 8px 16px rgba(0,0,0,0.1)',
@@ -330,40 +360,42 @@ function BookList() {
                           loading="lazy"
                         />
                       </Box>
-                      <Box sx={{ 
-                        width: '100%',
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alighItems: 'center',
-                        mt: 2,
-                        mb: 2
-                      }}>
-                        <Button
-                          size="small"
-                          variant="contained"
-                          onClick={() => navigate(`/add?edit=${book._id}`)}
-                          sx={{
-                            minWidth: 'unset',
-                            px: 2,
-                            py: 0.5,
-                            bgcolor: '#75767A',
-                            fontSize: '0.75rem',
-                            textTransform: 'none',
-                            '&:hover': {
-                              bgcolor: '#636466'
-                            }
-                          }}
-                        >
-                          Change Cover
-                        </Button>
-                      </Box>
+                      {user?.role === 'admin' && (
+                        <Box sx={{ 
+                          width: '100%',
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alighItems: 'center',
+                          mt: 2,
+                          mb: 2
+                        }}>
+                          <Button
+                            size="small"
+                            variant="contained"
+                            onClick={() => navigate(`/add?edit=${book._id}`)}
+                            sx={{
+                              minWidth: 'unset',
+                              px: 2,
+                              py: 0.5,
+                              bgcolor: '#75767A',
+                              fontSize: '0.75rem',
+                              textTransform: 'none',
+                              '&:hover': {
+                                bgcolor: '#636466'
+                              }
+                            }}
+                          >
+                            Change Cover
+                          </Button>
+                        </Box>
+                      )}
                       <Typography 
                         variant="h6" 
                         component="div" 
                         gutterBottom
                         sx={{ 
                           fontWeight: 600,
-                          color: '#2c3e50',
+                          color: '#75767A',
                           mb: 1
                         }}
                       >
@@ -412,15 +444,18 @@ function BookList() {
                     <CardActions sx={{ 
                       p: 2, 
                       pt: 0,
-                      justifyContent: 'center'
+                      justifyContent: 'center',
+                      gap: 2
                     }}>
                       <Button
                         size="small"
                         variant="contained"
-                        onClick={() => navigate('/profile')}
+                        onClick={() => user?.role === 'admin' ? 
+                          navigate('/profile', { state: { showDetails: true } }) : 
+                          navigate(`/book/${book._id}`)}
                         sx={{
                           bgcolor: '#75767A',
-                          width: '80%',
+                          width: '35%',
                           py: 1,
                           fontSize: '0.875rem',
                           fontWeight: 500,
@@ -430,7 +465,39 @@ function BookList() {
                           }
                         }}
                       >
-                        View Book
+                        {user?.role === 'admin' ? 'View Books' : 'View Book'}
+                      </Button>
+                      <Button
+                        size="small"
+                        variant="contained"
+                        onClick={() => navigate('/cart', { 
+                          state: { 
+                            bookData: {
+                              id: book._id,
+                              title: book.title,
+                              author: book.author,
+                              description: book.description,
+                              isbn: book.isbn,
+                              availableCopies: book.availableCopies,
+                              price: 29.99, // You can set your own price logic
+                              quantity: 1,
+                              imageUrl: book.imageUrl
+                            }
+                          }
+                        })}
+                        sx={{
+                          bgcolor: 'secondary.main',
+                          width: '35%',
+                          py: 1,
+                          fontSize: '0.875rem',
+                          fontWeight: 500,
+                          textTransform: 'none',
+                          '&:hover': {
+                            bgcolor: 'secondary.dark'
+                          }
+                        }}
+                      >
+                        Add to Cart
                       </Button>
                     </CardActions>
                   </Card>
@@ -440,6 +507,20 @@ function BookList() {
           </Grid>
         )}
       </Container>
+      <Box 
+        sx={{ 
+          width: '100vw',
+          position: 'relative',
+          left: '50%',
+          right: '50%',
+          marginLeft: '-50vw',
+          marginRight: '-50vw',
+          mt: 'auto',
+          bgcolor: '#75767A'
+        }}
+      >
+        <Footer />
+      </Box>
     </Box>
   );
 }

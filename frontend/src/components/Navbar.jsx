@@ -62,22 +62,24 @@ function Navbar() {
           >
             Books
           </Button>
-          <Button 
-            color="inherit" 
-            onClick={handleAddBookClick}
-            sx={{ 
-              color: '#ffffff',
-              fontFamily: '"Titillium Web", sans-serif',
-              fontWeight: 600,
-              '&:hover': { 
-                backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                transform: 'translateY(-2px)',
-                transition: 'all 0.2s'
-              }
-            }}
-          >
-            Add Book
-          </Button>
+          {user?.role === 'admin' && (
+            <Button 
+              color="inherit" 
+              onClick={handleAddBookClick}
+              sx={{ 
+                color: '#ffffff',
+                fontFamily: '"Titillium Web", sans-serif',
+                fontWeight: 600,
+                '&:hover': { 
+                  backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                  transform: 'translateY(-2px)',
+                  transition: 'all 0.2s'
+                }
+              }}
+            >
+              Add Book
+            </Button>
+          )}
           {user ? (
             <Box 
               component={Link}

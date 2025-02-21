@@ -27,6 +27,7 @@ import {
 } from '@mui/material';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import axios from 'axios';
+import Footer from './Footer';
 
 function UserProfile() {
   const { user, setUser } = useContext(UserContext);
@@ -153,7 +154,7 @@ function UserProfile() {
         p: 0,
         minHeight: '100vh',
         minWidth: '100vw',
-        backgroundImage: `url('/images/User Profile.jpg')`,
+        backgroundImage: `url('./images/userprofile.jpg')`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
@@ -214,7 +215,7 @@ function UserProfile() {
         sx={{ 
           mb: 4, 
           fontWeight: 700,
-          color: '#fff',
+          color: '#2e2e2e',
           textAlign: 'center',
           fontFamily: '"Titillium Web", sans-serif',
           textShadow: '2px 2px 4px rgba(0,0,0,0.3)'
@@ -333,7 +334,7 @@ function UserProfile() {
             <Typography variant="h6" sx={{ 
               mb: 3, 
               fontWeight: 600,
-              color: '#2c3e50',
+              color: '#75767A',
               alignSelf: { xs: 'center', sm: 'flex-start' },
               ml: { xs: 0, sm: 8 }
             }}>
@@ -446,7 +447,9 @@ function UserProfile() {
                       <TableCell sx={{ fontWeight: 600, bgcolor: '#75767A', color: 'white' }}>ISBN</TableCell>
                       <TableCell sx={{ fontWeight: 600, bgcolor: '#75767A', color: 'white' }}>Published Year</TableCell>
                       <TableCell sx={{ fontWeight: 600, bgcolor: '#75767A', color: 'white' }}>Available Copies</TableCell>
-                      <TableCell sx={{ fontWeight: 600, bgcolor: '#75767A', color: 'white' }}>Actions</TableCell>
+                      {user?.role === 'admin' && (
+                        <TableCell sx={{ fontWeight: 600, bgcolor: '#75767A', color: 'white' }}>Actions</TableCell>
+                      )}
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -465,37 +468,39 @@ function UserProfile() {
                         <TableCell>{book.isbn}</TableCell>
                         <TableCell>{book.publishedYear}</TableCell>
                         <TableCell>{book.availableCopies}</TableCell>
-                        <TableCell>
-                          <Box sx={{ display: 'flex', gap: 2 }}>
-                            <Button
-                              size="small"
-                              variant="contained"
-                              onClick={() => navigate(`/add?edit=${book._id}`)}
-                              sx={{
-                                bgcolor: '#75767A',
-                                minWidth: 'unset',
-                                px: 2,
-                                '&:hover': {
-                                  bgcolor: '#636466'
-                                }
-                              }}
-                            >
-                              Edit
-                            </Button>
-                            <Button
-                              size="small"
-                              variant="contained"
-                              color="secondary"
-                              onClick={() => handleDeleteClick(book)}
-                              sx={{
-                                minWidth: 'unset',
-                                px: 2
-                              }}
-                            >
-                              Delete
-                            </Button>
-                          </Box>
-                        </TableCell>
+                        {user?.role === 'admin' && (
+                          <TableCell>
+                            <Box sx={{ display: 'flex', gap: 2 }}>
+                              <Button
+                                size="small"
+                                variant="contained"
+                                onClick={() => navigate(`/add?edit=${book._id}`)}
+                                sx={{
+                                  bgcolor: '#75767A',
+                                  minWidth: 'unset',
+                                  px: 2,
+                                  '&:hover': {
+                                    bgcolor: '#636466'
+                                  }
+                                }}
+                              >
+                                Edit
+                              </Button>
+                              <Button
+                                size="small"
+                                variant="contained"
+                                color="secondary"
+                                onClick={() => handleDeleteClick(book)}
+                                sx={{
+                                  minWidth: 'unset',
+                                  px: 2
+                                }}
+                              >
+                                Delete
+                              </Button>
+                            </Box>
+                          </TableCell>
+                        )}
                       </TableRow>
                     ))}
                   </TableBody>
@@ -505,6 +510,8 @@ function UserProfile() {
           </Box>
         )}
       </Paper>
+
+      <Footer />
 
       <Dialog
         open={deleteDialogOpen}
