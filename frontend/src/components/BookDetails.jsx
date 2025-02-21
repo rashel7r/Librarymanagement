@@ -427,7 +427,12 @@ function BookDetails() {
                   </Button>
                   <Button
                     variant="contained"
-                    onClick={() => navigate('/profile')}
+                    onClick={() => navigate('/profile', {
+                      state: {
+                        showDetails: true,
+                        selectedBook: book
+                      }
+                    })}
                     sx={{
                       bgcolor: '#75767A',
                       px: 8,
