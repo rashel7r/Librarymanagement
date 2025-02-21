@@ -23,7 +23,8 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
-  DialogContentText
+  DialogContentText,
+  Grid
 } from '@mui/material';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import axios from 'axios';
@@ -40,15 +41,16 @@ function UserProfile() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [showDetails, setShowDetails] = useState(location.state?.showDetails || false);
+  const [selectedBook, setSelectedBook] = useState(location.state?.selectedBook || null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [bookToDelete, setBookToDelete] = useState(null);
   const [deleteStatus, setDeleteStatus] = useState({ show: false, message: '', severity: 'success' });
 
   useEffect(() => {
-    if (showDetails) {
+    if (showDetails && !selectedBook) {
       fetchBooks();
     }
-  }, [showDetails]);
+  }, [showDetails, selectedBook]);
 
   const fetchBooks = async () => {
     try {
@@ -66,6 +68,7 @@ function UserProfile() {
 
   const handleShowDetails = () => {
     if (!showDetails) {
+      setSelectedBook(null);
       fetchBooks();
     }
     setShowDetails(!showDetails);
@@ -425,7 +428,14 @@ function UserProfile() {
 
         {showDetails && (
           <Box sx={{ mt: 4 }}>
-            <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
+            <Typography variant="h6" sx={{ 
+              mb: 2, 
+              mt: 2,
+              fontWeight: 600,
+              color: '#75767A',
+              textAlign: 'center',
+              fontSize: '1.5rem'
+            }}>
               Book Info
             </Typography>
             {loading ? (
@@ -434,6 +444,54 @@ function UserProfile() {
               </Box>
             ) : error ? (
               <Typography color="error" sx={{ p: 2 }}>{error}</Typography>
+            ) : selectedBook ? (
+              <Box sx={{ p: 2 }}>
+                <Grid container spacing={3}>
+                  <Grid item xs={12} md={4}>
+                    <img
+                      src={selectedBook.imageUrl ? 
+                        (selectedBook.imageUrl.startsWith('http') ? selectedBook.imageUrl : `/images/${selectedBook.imageUrl}`)
+                        : '/images/Default Book1.jpg'}
+                      alt={selectedBook.title}
+                      style={{
+                        width: '100%',
+                        height: 'auto',
+                        maxHeight: '300px',
+                        objectFit: 'contain'
+                      }}
+                    />
+                  </Grid>
+                  <Grid item xs={12} md={8}>
+                    <Typography variant="h5" sx={{ mb: 2 }}>{selectedBook.title}</Typography>
+                    <Typography variant="subtitle1" sx={{ mb: 1 }}>By {selectedBook.author}</Typography>
+                    <Typography variant="body1" sx={{ mb: 2 }}>{selectedBook.description}</Typography>
+                    <Box sx={{ mb: 2 }}>
+                      <Typography variant="body2">Genre: {selectedBook.genre}</Typography>
+                      <Typography variant="body2">ISBN: {selectedBook.isbn}</Typography>
+                      <Typography variant="body2">Published Year: {selectedBook.publishedYear}</Typography>
+                      <Typography variant="body2">Available Copies: {selectedBook.availableCopies}</Typography>
+                    </Box>
+                    {user?.role === 'admin' && (
+                      <Box sx={{ display: 'flex', gap: 2 }}>
+                        <Button
+                          variant="contained"
+                          onClick={() => navigate(`/add?edit=${selectedBook._id}`)}
+                          sx={{ bgcolor: '#75767A', '&:hover': { bgcolor: '#636466' } }}
+                        >
+                          Edit Book
+                        </Button>
+                        <Button
+                          variant="contained"
+                          color="error"
+                          onClick={() => handleDeleteClick(selectedBook)}
+                        >
+                          Delete Book
+                        </Button>
+                      </Box>
+                    )}
+                  </Grid>
+                </Grid>
+              </Box>
             ) : userBooks.length === 0 ? (
               <Typography sx={{ p: 2 }}>No books available.</Typography>
             ) : (
